@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "declaration": false,
+    "noImplicitAny": false, // 类型不标注默认为any，不会报错
+    "removeComments": true, // 删除注释
+    "moduleResolution": "Node", // 模块解析方式
+    "esModuleInterop": true, // 支持es6 commonjs模块
+    "jsx": "preserve", // 不转化jsx
+    "noLib": false, // 不解析外部类库
+    "target": "ES6", // 编译目标
+    "sourceMap": true, // 是否生成sourceMap
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "allowSyntheticDefaultImports": true, // 允许synthetic default imports
+    "experimentalDecorators": true,// 装饰器语法
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true, // 允许json模块
+    "strict": true, // 严格模式
+    "skipLibCheck": true, // 忽略lib.d.ts检查
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "**/__tests__/*",
+    "dist/**"
+  ],
+}

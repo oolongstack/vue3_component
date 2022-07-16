@@ -11,6 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@zi-shui/components": "workspace:*",
+    "@zi-shui/theme-chalk": "workspace:*",
+    "@zi-shui/utils": "workspace:*",
     "typescript": "^4.7.4",
     "vue": "^3.2.37"
   }
