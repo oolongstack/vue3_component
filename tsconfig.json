@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "ESNext",
     "declaration": false,
-    "noImplicitAny": false, // 类型不标注默认为any，不会报错
+    "noImplicitAny": true, // 类型不标注默认为any，不会报错
     "removeComments": true, // 删除注释
     "moduleResolution": "Node", // 模块解析方式
     "esModuleInterop": true, // 支持es6 commonjs模块

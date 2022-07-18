@@ -1,9 +1,13 @@
 import { App, createApp } from "vue";
 import AppView from "./App.vue";
 import Icon from "@zi-shui/components/icon";
-// 给组件添加install方法的函数
-import { withInstall } from "@zi-shui/utils/withInstall";
+import "@zi-shui/theme-chalk/src/index.scss";
+const plugins = [Icon];
 
 const app: App = createApp(AppView);
-app.use(withInstall(Icon));
+
+// 将组件注册成全局组件了
+plugins.forEach((plugin) => {
+  app.use(plugin);
+});
 app.mount("#app");
