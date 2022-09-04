@@ -1,9 +1,9 @@
-@use "config" as *;
-@forward "config";
+@use 'config' as *;
+@forward 'config';
 
 // .z-button{}
 @mixin b($block) {
-  $B: $namespace + "-" + $block;
+  $B: $namespace + '-' + $block;
   .#{$B} {
     @content;
   }
@@ -35,4 +35,10 @@
       @content;
     }
   }
+}
+
+@mixin button-variant($color, $background-color, $border-color) {
+  color: $color;
+  background: $background-color;
+  border-color: $border-color;
 }

@@ -2,13 +2,31 @@
   <c-icon :size="30" :color="'red'">
     <Aperture />
   </c-icon>
-  <c-icon :size="30" :color="'red'">
-    <Aperture />
-  </c-icon>
   <!-- 树型组件 传入属性结构的数据源 -->
-  <c-tree :data="data" label-field="xx" key-field="key" children-field="children"
-    :default-expended-keys="['40', '41', '4130']">
+  <c-tree
+    :data="data"
+    label-field="xx"
+    key-field="key"
+    children-field="children"
+    :default-expended-keys="['40', '41', '4130']"
+  >
   </c-tree>
+
+  <c-button
+    type="danger"
+    size="large"
+    :round="true"
+    :loading="true"
+    :disabled="true"
+  >
+    按钮
+    <template #icon>
+      <Aperture />
+    </template>
+  </c-button>
+  <c-form-item>
+    <input type="text" />
+  </c-form-item>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
@@ -38,5 +56,4 @@ const data = ref(createData());
 console.log(data);
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
