@@ -3,7 +3,7 @@ import _Icon from './src/icon.vue';
 // 给组件添加install方法的函数
 import { withInstall } from '@zi-shui/utils/withInstall';
 
-const Icon = withInstall(_Icon);
+const Icon = withInstall<typeof _Icon>(_Icon);
 
 export * from './src/icon';
 export default Icon;

@@ -2,13 +2,11 @@
   <c-icon :size="30" :color="'red'">
     <Aperture />
   </c-icon>
+  <c-icon :size="30" :color="'red'">
+    <Aperture />
+  </c-icon>
   <!-- 树型组件 传入属性结构的数据源 -->
-  <c-tree
-    :data="data"
-    label-field="xx"
-    key-field="key"
-    children-field="children"
-  ></c-tree>
+  <c-tree :data="data" label-field="xx" key-field="key" children-field="children"></c-tree>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
@@ -37,4 +35,5 @@ const data = ref(createData());
 console.log(data);
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
