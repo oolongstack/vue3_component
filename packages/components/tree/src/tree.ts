@@ -1,5 +1,5 @@
 import { ExtractPropTypes, PropType } from 'vue';
-type Key = string | number;
+export type Key = string | number;
 
 export interface TreeOption {
   label?: Key;
@@ -13,6 +13,11 @@ export interface TreeOption {
 export const treeProps = {
   data: {
     type: Array as PropType<TreeOption[]>,
+    default: () => []
+  },
+  defaultExpendedKeys: {
+    // 默认展开的key
+    type: Array as PropType<Key[]>,
     default: () => []
   },
   labelField: {
@@ -38,3 +43,12 @@ export interface TreeNode extends Required<TreeOption> {
   children: TreeNode[];
   isLeaf: boolean; // 是否为叶子节点
 }
+
+export const treeNodeProps = {
+  node: {
+    type: Object as PropType<TreeNode>,
+    required: true
+  }
+} as const;
+
+export type TreeNodeProps = Partial<ExtractPropTypes<typeof treeNodeProps>>;

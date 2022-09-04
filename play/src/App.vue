@@ -6,7 +6,9 @@
     <Aperture />
   </c-icon>
   <!-- 树型组件 传入属性结构的数据源 -->
-  <c-tree :data="data" label-field="xx" key-field="key" children-field="children"></c-tree>
+  <c-tree :data="data" label-field="xx" key-field="key" children-field="children"
+    :default-expended-keys="['40', '41', '4130']">
+  </c-tree>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
@@ -14,6 +16,7 @@ import { Aperture } from '@vicons/ionicons5';
 function createData(level = 4, parentKey = ''): any {
   if (!level) return [];
   const arr = new Array(6 - level).fill(0);
+
   return arr.map((_, idx: number) => {
     const key = parentKey + level + idx;
     return {
