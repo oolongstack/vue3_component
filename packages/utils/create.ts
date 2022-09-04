@@ -36,7 +36,7 @@ function createBEM(prefixName: string) {
     blockSuffix && element && modifier
       ? _bem(prefixName, blockSuffix, element, modifier)
       : '';
-  const is = (name: string, state: any) => (state ? `is-${name}` : '');
+  const is = (name: string, state?: any) => (state ? `is-${name}` : '');
   return {
     b,
     e,

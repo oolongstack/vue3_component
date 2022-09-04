@@ -5,7 +5,13 @@
         {{ node.label }}
       </div>
     </template> -->
-    <CTreeNode v-for="node in flattenTree" :key="node.key" :node="node">
+    <CTreeNode
+      v-for="node in flattenTree"
+      :key="node.key"
+      :node="node"
+      :expanded="isExpanded(node)"
+      @toggle="toggleExpand"
+    >
     </CTreeNode>
   </div>
 </template>
@@ -14,11 +20,11 @@
 import { createNamespace } from '@zi-shui/utils/create';
 import { ref, watch, computed } from 'vue';
 import { TreeNode, treeProps, TreeOption, Key } from './tree';
-import CTreeNode from './treeNode.vue'
+import CTreeNode from './treeNode.vue';
 defineOptions({
   name: 'c-tree'
 });
-const bem = createNamespace('tree')
+const bem = createNamespace('tree');
 const props = defineProps(treeProps);
 
 const tree = ref<TreeNode[]>([]);
@@ -77,38 +83,57 @@ watch(
   }
 );
 
-const expandedKeysSet = ref<Set<Key>>(new Set(props.defaultExpendedKeys))
+const expandedKeysSet = ref<Set<Key>>(new Set(props.defaultExpendedKeys));
 
 const flattenTree = computed(() => {
-  const expendedKeys = expandedKeysSet.value // 要展开的节点
-  const flattenNodes: TreeNode[] = []
+  const expendedKeys = expandedKeysSet.value; // 要展开的节点
+  const flattenNodes: TreeNode[] = [];
   // 用户传的格式化好的树
-  const nodes = tree.value || []
+  const nodes = tree.value || [];
   // 使用栈遍历树 不使用递归
-  const stack: TreeNode[] = []
+  const stack: TreeNode[] = [];
   for (let i = nodes.length - 1; i >= 0; i--) {
-    stack.push(nodes[i]) // 倒序入栈
+    stack.push(nodes[i]); // 倒序入栈
   }
 
   while (stack.length) {
-    const node = stack.pop()
-    if (!node) continue
-    flattenNodes.push(node)
+    const node = stack.pop();
+    if (!node) continue;
+    flattenNodes.push(node);
     if (expendedKeys.has(node.key)) {
-      const children = node.children
+      const children = node.children;
       if (children.length) {
         for (let i = children.length - 1; i >= 0; i--) {
-          stack.push(children[i])
+          stack.push(children[i]);
         }
       }
     }
   }
-  return flattenNodes
-})
+  return flattenNodes;
+});
 
-console.log(flattenTree.value);
+// 是否为展开状态
+function isExpanded(node: TreeNode): boolean {
+  return expandedKeysSet.value.has(node.key);
+}
 
+// 收缩
+function collpase(node: TreeNode): void {
+  expandedKeysSet.value.delete(node.key);
+}
+// 展开
+function expand(node: TreeNode): void {
+  expandedKeysSet.value.add(node.key);
+}
+// 切换展开收缩
+function toggleExpand(node: TreeNode): void {
+  const expandKeys = expandedKeysSet.value;
+  if (expandKeys.has(node.key)) {
+    collpase(node);
+  } else {
+    expand(node);
+  }
+}
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
