@@ -1,14 +1,10 @@
 <template>
   <div :class="bem.b()">
-    <!-- <template v-for="node in flattenTree" :key="node.key">
-      <div :class="bem.e('element')">
-        {{ node.label }}
-      </div>
-    </template> -->
     <CTreeNode
       v-for="node in flattenTree"
       :key="node.key"
       :node="node"
+      :loadingKeys="loadingKeysRef"
       :expanded="isExpanded(node)"
       @toggle="toggleExpand"
     >
@@ -47,7 +43,7 @@ const treeOptions = createOptions(
   props.labelField,
   props.childrenField
 );
-const createTree = (data: TreeOption[]) => {
+const createTree = (data: TreeOption[], parent: TreeNode | null) => {
   const traversal = (data: TreeOption[], parent: TreeNode | null) => {
     return data.map(node => {
       const children = treeOptions.getChildren(node) || []; // children 不一定有
@@ -65,7 +61,7 @@ const createTree = (data: TreeOption[]) => {
       return treeNode;
     });
   };
-  const result: TreeNode[] = traversal(data, null);
+  const result: TreeNode[] = traversal(data, parent);
   return result;
 };
 
@@ -74,7 +70,7 @@ watch(
   () => props.data,
   (data: TreeOption[]) => {
     // 监听用户输入的数据源，变化就重新赋值
-    tree.value = createTree(data);
+    tree.value = createTree(data, null);
 
     console.log(tree.value, 'tree');
   },
@@ -121,14 +117,36 @@ function isExpanded(node: TreeNode): boolean {
 function collpase(node: TreeNode): void {
   expandedKeysSet.value.delete(node.key);
 }
+const loadingKeysRef = ref(new Set<Key>());
+const triggerLoading = (node: TreeNode) => {
+  // loadingKeysRef.value.add(key);
+  if (!node.children.length && !node.isLeaf) {
+    // 需要异步加载
+    const loadingKeys = loadingKeysRef.value;
+    if (!loadingKeys.has(node.key)) {
+      loadingKeys.add(node.key);
+      if (props.onLoad) {
+        props.onLoad(node.rawNode).then((nodes: TreeOption[]) => {
+          node.rawNode.children = nodes;
+          node.children = createTree(nodes, node);
+          loadingKeys.delete(node.key);
+        });
+      }
+    }
+  }
+};
 // 展开
 function expand(node: TreeNode): void {
   expandedKeysSet.value.add(node.key);
+  // 展开加载
+  triggerLoading(node);
 }
 // 切换展开收缩
 function toggleExpand(node: TreeNode): void {
   const expandKeys = expandedKeysSet.value;
-  if (expandKeys.has(node.key)) {
+
+  // 正在加载是不能关闭
+  if (expandKeys.has(node.key) && !loadingKeysRef.value.has(node.key)) {
     collpase(node);
   } else {
     expand(node);

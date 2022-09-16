@@ -10,3 +10,5 @@ declare module 'vue' {
     CTree: typeof Tree;
   }
 }
+
+export * from './src/tree';

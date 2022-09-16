@@ -3,12 +3,19 @@
     <Aperture />
   </c-icon>
   <!-- 树型组件 传入属性结构的数据源 -->
-  <c-tree
+  <!-- <c-tree
     :data="data"
     label-field="xx"
     key-field="key"
     children-field="children"
     :default-expended-keys="['40', '41', '4130']"
+  >
+  </c-tree> -->
+
+  <c-tree
+    :data="data"
+    :on-load="handleLoad"
+    v-model:selected-keys="selectedKeys"
   >
   </c-tree>
 
@@ -31,18 +38,38 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Aperture } from '@vicons/ionicons5';
-function createData(level = 4, parentKey = ''): any {
-  if (!level) return [];
-  const arr = new Array(6 - level).fill(0);
+import { Key, TreeOption } from '@zi-shui/components/tree';
+// function createData(level = 4, parentKey = ''): any {
+//   if (!level) return [];
+//   const arr = new Array(6 - level).fill(0);
 
-  return arr.map((_, idx: number) => {
-    const key = parentKey + level + idx;
-    return {
-      xx: createLabel(level), // 显示的内容
-      key, // 为了唯一性
-      children: createData(level - 1, key) // 孩子
-    };
-  });
+//   return arr.map((_, idx: number) => {
+//     const key = parentKey + level + idx;
+//     return {
+//       xx: createLabel(level), // 显示的内容
+//       key, // 为了唯一性
+//       children: createData(level - 1, key) // 孩子
+//     };
+//   });
+// }
+
+function createData() {
+  return [
+    { label: nextLabel(), key: 1, isLeaf: false },
+    { label: nextLabel(), key: 2, isLeaf: false }
+  ];
+}
+function nextLabel(currentLabel?: string | number): string {
+  if (!currentLabel) return 'Out of Tao, One is born';
+  if (currentLabel === 'Out of Tao, One is born') return 'Out of One, Two';
+  if (currentLabel === 'Out of One, Two') return 'Out of Two, Three';
+  if (currentLabel === 'Out of Two, Three') {
+    return 'Out of Three, the created universe';
+  }
+  if (currentLabel === 'Out of Three, the created universe') {
+    return 'Out of Tao, One is born';
+  }
+  return '';
 }
 function createLabel(level: number): string {
   if (level === 4) return '道生一';
@@ -54,6 +81,22 @@ function createLabel(level: number): string {
 const data = ref(createData());
 
 console.log(data);
+
+// 展开才会去加载
+const handleLoad = (node: TreeOption): Promise<TreeOption[]> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve([
+        {
+          label: nextLabel(node.label),
+          key: node.key + nextLabel(node.label),
+          isLeaf: false
+        }
+      ]);
+    }, 1000);
+  });
+};
+const selectedKeys = ref<Key[]>([]);
 </script>
 
 <style scoped></style>

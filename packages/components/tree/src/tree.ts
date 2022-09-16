@@ -5,7 +5,7 @@ export interface TreeOption {
   label?: Key;
   key?: Key;
   isLeaf: boolean;
-  children: TreeOption[];
+  children?: TreeOption[];
   [key: string]: unknown;
 }
 
@@ -31,6 +31,9 @@ export const treeProps = {
   childrenField: {
     type: String as PropType<string>,
     default: 'children'
+  },
+  onLoad: {
+    type: Function as PropType<(node: TreeOption) => Promise<TreeOption[]>>
   }
 } as const;
 
@@ -52,6 +55,9 @@ export const treeNodeProps = {
   expanded: {
     type: Boolean as PropType<Boolean>,
     required: true
+  },
+  loadingKeys: {
+    type: Set as PropType<Set<Key>>
   }
 } as const;
 
