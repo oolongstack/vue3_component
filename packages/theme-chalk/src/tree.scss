@@ -25,4 +25,7 @@
       cursor: default;
     }
   }
+  @include when(selected) {
+    background-color: aqua;
+  }
 }

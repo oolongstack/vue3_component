@@ -7,6 +7,8 @@
       :loadingKeys="loadingKeysRef"
       :expanded="isExpanded(node)"
       @toggle="toggleExpand"
+      :selectedKeys="selectKeysRef"
+      @select="handleSelect"
     >
     </CTreeNode>
   </div>
@@ -15,7 +17,7 @@
 <script setup lang="ts">
 import { createNamespace } from '@zi-shui/utils/create';
 import { ref, watch, computed } from 'vue';
-import { TreeNode, treeProps, TreeOption, Key } from './tree';
+import { TreeNode, treeProps, TreeOption, Key, treeEmits } from './tree';
 import CTreeNode from './treeNode.vue';
 defineOptions({
   name: 'c-tree'
@@ -152,6 +154,40 @@ function toggleExpand(node: TreeNode): void {
     expand(node);
   }
 }
+
+// 实现选中节点
+const emit = defineEmits(treeEmits);
+const selectKeysRef = ref<Key[]>([]);
+watch(
+  () => props.selectedKeys,
+  value => {
+    if (value) {
+      selectKeysRef.value = value;
+    }
+  },
+  {
+    immediate: true
+  }
+);
+const handleSelect = (node: TreeNode) => {
+  let keys = Array.from(selectKeysRef.value);
+  if (!props.selectable) return;
+  if (props.multiple) {
+    const idx = keys.findIndex(key => node.key === key);
+    if (idx > -1) {
+      keys.splice(idx, 1);
+    } else {
+      keys.push(node.key);
+    }
+  } else {
+    if (keys.includes(node.key)) {
+      keys = [];
+    } else {
+      keys = [node.key];
+    }
+  }
+  emit('update:selectedKeys', keys);
+};
 </script>
 
 <style scoped></style>

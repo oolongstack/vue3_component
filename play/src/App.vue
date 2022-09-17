@@ -15,6 +15,8 @@
   <c-tree
     :data="data"
     :on-load="handleLoad"
+    selectable
+    multiple
     v-model:selected-keys="selectedKeys"
   >
   </c-tree>
@@ -36,7 +38,7 @@
   </c-form-item>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Aperture } from '@vicons/ionicons5';
 import { Key, TreeOption } from '@zi-shui/components/tree';
 // function createData(level = 4, parentKey = ''): any {
@@ -96,7 +98,17 @@ const handleLoad = (node: TreeOption): Promise<TreeOption[]> => {
     }, 1000);
   });
 };
-const selectedKeys = ref<Key[]>([]);
+const selectedKeys = ref<Key[]>([1, 2]);
+
+watch(
+  () => selectedKeys,
+  newVal => {
+    console.log(newVal);
+  },
+  {
+    immediate: true
+  }
+);
 </script>
 
 <style scoped></style>
